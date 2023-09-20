@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <button type="button" id="roll" onclick="rollDice(dice)">Heitä noppaa</button>
+    <button type="button" id="dice1" onclick="lockDice(this.id)"></button>
+    <button type="button" id="dice2" onclick="lockDice(this.id)"></button> 
+    <button type="button" id="dice3" onclick="lockDice(this.id)"></button> 
+    <button type="button" id="dice4" onclick="lockDice(this.id)"></button> 
+    <button type="button" id="dice5" onclick="lockDice(this.id)"></button>
+    <table>
+        <tr>
+            <th>Nimi</th>
+            <th>Pisteet</th>
+        </tr>
+        <tr>
+            <td>Ykköset</td>
+            <td id="ones"></td>
+        </tr>
+        <tr>
+            <td>Kakkoset</td>
+            <td id="twos"></td>
+        </tr>
+        <tr>
+            <td>Kolmoset</td>
+            <td id="threes"></td>
+        </tr>
+        <tr>
+            <td>Neloset</td>
+            <td id="fours"></td>
+        </tr>
+        <tr>    
+            <td>Vitoset</td>
+            <td id="fives"></td>
+        </tr>
+        <tr>
+            <td>Kuutoset</td>
+            <td id="sixes"></td>
+        </tr>
+        <tr>
+            <td>BONUS</td>
+            <td id="bonus"></td>
+        </tr>
+        <tr>
+            <td>Pari</td>
+            <td id="pair"></td>
+        </tr>
+        <tr>
+            <td>Kaksi paria</td>
+            <td id="twoPair"></td>
+        </tr>
+        <tr>
+            <td>Kolme samaa</td>
+            <td id="threeOfAKind"></td>
+        </tr>
+        <tr>
+            <td>Neljä samaa</td>
+            <td id="fourOfAKind"></td>
+        </tr>
+        <tr>
+            <td>Pikku suora</td>
+            <td id="smallStraight"></td>
+        </tr>
+        <tr>
+            <td>Iso suora</td>
+            <td id="bigStraight"></td>
+        </tr>
+        <tr>
+            <td>Täyskäsi</td>
+            <td id="fullHouse"></td>
+        </tr>
+        <tr>
+            <td>Sattuma</td>
+            <td id="random"></td>
+        </tr>
+        <tr>
+            <td>Jatsi</td>
+            <td id="jatsi"></td>
+        </tr>
+        <tr>
+            <td>Summa</td>
+            <td id="score"></td>
+        </tr>
+    </table>
+<script src="script.js"></script>
+</html>
