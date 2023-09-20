@@ -80,13 +80,44 @@ function countDieValues(dice) {
 
 function calculateScores(dieCounts) {
     
-    // check upper hands
-    for (let i = 0; i <= 6; i++) {
-        const count = dieCounts[i + 1];
+    for (let i = 1; i <= 6; i++) {
+        const count = dieCounts[i];
+
+        // calculate all multiples of same value
         if(count) {
-            score.upperHands[i].check = (i + 1) * count;
+            score.upperHands[i - 1].check = i * count;
+
+            if(count >= 2) {
+                score.lowerHands.pair.check = 2 * i;
+
+                if(count >= 3)
+                    score.lowerHands.threeOfAKind.check = 3 * i;
+
+                if(count >= 4)
+                    score.lowerHands.fourOfAKind.check = 4 * i;
+
+                if(count === 5) {
+                    score.lowerHands.jatsi.check = 50;
+                    return ; // five same values can't score anywhere else
+                }
+            }
         }
+
+        
     }
+    
+    // check straights
+    if(Object.keys(dieCounts).length === 5) { // five unique values
+        let diceString = Object.keys(dieCounts).join("");
+
+        if (diceString === '12345')
+            score.lowerHands.smallStraight.check = 15;
+        else if (diceString === '23456')
+            score.lowerHands.bigStraight.check = 20;
+    }
+
+
+
     console.log(score);
 }
 
