@@ -1,5 +1,5 @@
 let score = {
-    upperHands: [
+    upperSection: [
         { check: null, written: null },  // ones
         { check: null, written: null },  // twos
         { check: null, written: null },  // threes
@@ -8,9 +8,9 @@ let score = {
         { check: null, written: null }   // sixes
     ],
     bonus: null,
-    lowerHands: {
+    lowerSection: {
         pair: {check: null, written: null},
-        twoPair: {check: null, written: null},
+        twoPairs: {check: null, written: null},
         threeOfAKind: {check: null, written: null},
         fourOfAKind: {check: null, written: null},
         smallStraight: {check: null, written: null},
@@ -21,11 +21,11 @@ let score = {
     },
     total: null,
     resetCheck() {
-        for (const upperHand of this.upperHands) {
+        for (const upperHand of this.upperSection) {
           upperHand.check = null;
         }
       
-        for (const lowerHand of Object.values(this.lowerHands)) {
+        for (const lowerHand of Object.values(this.lowerSection)) {
           lowerHand.check = null;
         }
     }
@@ -62,80 +62,73 @@ function rollDice(dice) {
         }
     }
     const diceCounts = countDieValues(dice);
-    calculateScores(diceCounts);
+    calculatePossibleScores(diceCounts);
 }
 
 function countDieValues(dice) {
-    const dieCounts = {};
+    const faceValueCounts = {};
     
     // i=1 because the roll count is at dice[0]
     for (let i = 1; i <= 5; i++) {
         let roll = dice[i][0];
         
-        dieCounts[roll] = (dieCounts[roll] || 0) + 1;
+        faceValueCounts[roll] = (faceValueCounts[roll] || 0) + 1;
     }
 
-    return dieCounts;
+    return faceValueCounts;
 }
 
-function calculateScores(dieCounts) {
-    const keys = Object.keys(dieCounts);
+function calculatePossibleScores(faceValueCounts) {    
     
     let chance = 0;
-
     firstPair = null;
     
-    for (let i = 1; i <= 6; i++) {
-        const count = dieCounts[i];
+    for (let faceValue in faceValueCounts) {
+        const currentCount = faceValueCounts[faceValue];
+        const faceValueInt = parseInt(faceValue);       
         
-        // calculate all multiples of same value
-        if(count) {
-            
-            // chance
-            chance += i * count;
-            
-            // upperhands
-            score.upperHands[i - 1].check = i * count;
-            
-            if(count >= 2) {
-                thisPair = 2 * i;
+        // chance
+        chance += faceValueInt * currentCount;
+        
+        // upper section scores
+        score.upperSection[faceValueInt - 1].check = faceValueInt * currentCount;
+        
+        // pair
+        if (currentCount >= 2) {
+            let thisPair = 2 * faceValueInt;
 
-                if(firstPair === null) {
-                    firstPair = thisPair;
-                } else {
-                    score.lowerHands.twoPair.check = firstPair + thisPair;
-                }
-                score.lowerHands.pair.check = thisPair;
-                
+            // two pairs
+            if (firstPair === null) {
+                firstPair = thisPair;
+            } else {
+                score.lowerSection.twoPairs.check = firstPair + thisPair;
+            }
+            score.lowerSection.pair.check = thisPair;
 
+            // three of a kind
+            if (currentCount >= 3)
+                score.lowerSection.threeOfAKind.check = 3 * faceValueInt;
 
-                // let nextKeyIndex = keys.indexOf(i.toString()) + 1;
-                // let nextKey = keys[nextKeyIndex];
-                // let nextCount = dieCounts[nextKey];
+            // four of a kind
+            if (currentCount >= 4)
+                score.lowerSection.fourOfAKind.check = 4 * faceValueInt;
 
-                if(count >= 3)
-                    score.lowerHands.threeOfAKind.check = 3 * i;
-
-                if(count >= 4)
-                    score.lowerHands.fourOfAKind.check = 4 * i;
-
-                if(count === 5) {
-                    score.lowerHands.jatsi.check = 50;
-                    return ; // five same values can't score anywhere else
-                }
+            // jatsi - five of a kind
+            if (currentCount === 5) {
+                score.lowerSection.jatsi.check = 50;
             }
         }
     }
-    score.lowerHands.chance.check = chance;
+    score.lowerSection.chance.check = chance;
     
     // check straights
-    if(Object.keys(dieCounts).length === 5) { // five unique values
-        let diceString = Object.keys(dieCounts).join("");
+    if(Object.keys(faceValueCounts).length === 5) { // five unique values
+        let diceString = Object.keys(faceValueCounts).join("");
 
         if (diceString === '12345')
-            score.lowerHands.smallStraight.check = 15;
+            score.lowerSection.smallStraight.check = 15;
         else if (diceString === '23456')
-            score.lowerHands.bigStraight.check = 20;
+            score.lowerSection.bigStraight.check = 20;
     }
 
 
