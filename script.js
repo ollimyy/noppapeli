@@ -16,7 +16,7 @@ let score = {
         smallStraight: {check: null, written: null},
         bigStraight: {check: null, written: null},
         fullHouse: {check: null, written: null},
-        random: {check: null, written: null},
+        chance: {check: null, written: null},
         jatsi: {check: null, written: null},
     },
     total: null,
@@ -79,16 +79,39 @@ function countDieValues(dice) {
 }
 
 function calculateScores(dieCounts) {
+    const keys = Object.keys(dieCounts);
+    
+    let chance = 0;
+
+    firstPair = null;
     
     for (let i = 1; i <= 6; i++) {
         const count = dieCounts[i];
-
+        
         // calculate all multiples of same value
         if(count) {
+            
+            // chance
+            chance += i * count;
+            
+            // upperhands
             score.upperHands[i - 1].check = i * count;
-
+            
             if(count >= 2) {
-                score.lowerHands.pair.check = 2 * i;
+                thisPair = 2 * i;
+
+                if(firstPair === null) {
+                    firstPair = thisPair;
+                } else {
+                    score.lowerHands.twoPair.check = firstPair + thisPair;
+                }
+                score.lowerHands.pair.check = thisPair;
+                
+
+
+                // let nextKeyIndex = keys.indexOf(i.toString()) + 1;
+                // let nextKey = keys[nextKeyIndex];
+                // let nextCount = dieCounts[nextKey];
 
                 if(count >= 3)
                     score.lowerHands.threeOfAKind.check = 3 * i;
@@ -102,9 +125,8 @@ function calculateScores(dieCounts) {
                 }
             }
         }
-
-        
     }
+    score.lowerHands.chance.check = chance;
     
     // check straights
     if(Object.keys(dieCounts).length === 5) { // five unique values
