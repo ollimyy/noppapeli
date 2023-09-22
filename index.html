@@ -1,84 +1,109 @@
 <!DOCTYPE html>
-<html>
-    <button type="button" id="roll" onclick="rollDice(dice)">Heitä noppaa</button>
-    <button type="button" id="dice1" onclick="lockDice(this.id)"></button>
-    <button type="button" id="dice2" onclick="lockDice(this.id)"></button> 
-    <button type="button" id="dice3" onclick="lockDice(this.id)"></button> 
-    <button type="button" id="dice4" onclick="lockDice(this.id)"></button> 
-    <button type="button" id="dice5" onclick="lockDice(this.id)"></button>
-    <table>
-        <tr>
-            <th>Nimi</th>
-            <th>Pisteet</th>
-        </tr>
-        <tr>
-            <td>Ykköset</td>
-            <td id="ones"></td>
-        </tr>
-        <tr>
-            <td>Kakkoset</td>
-            <td id="twos"></td>
-        </tr>
-        <tr>
-            <td>Kolmoset</td>
-            <td id="threes"></td>
-        </tr>
-        <tr>
-            <td>Neloset</td>
-            <td id="fours"></td>
-        </tr>
-        <tr>    
-            <td>Vitoset</td>
-            <td id="fives"></td>
-        </tr>
-        <tr>
-            <td>Kuutoset</td>
-            <td id="sixes"></td>
-        </tr>
-        <tr>
-            <td>BONUS</td>
-            <td id="bonus"></td>
-        </tr>
-        <tr>
-            <td>Pari</td>
-            <td id="pair"></td>
-        </tr>
-        <tr>
-            <td>Kaksi paria</td>
-            <td id="twoPair"></td>
-        </tr>
-        <tr>
-            <td>Kolme samaa</td>
-            <td id="threeOfAKind"></td>
-        </tr>
-        <tr>
-            <td>Neljä samaa</td>
-            <td id="fourOfAKind"></td>
-        </tr>
-        <tr>
-            <td>Pikku suora</td>
-            <td id="smallStraight"></td>
-        </tr>
-        <tr>
-            <td>Iso suora</td>
-            <td id="bigStraight"></td>
-        </tr>
-        <tr>
-            <td>Täyskäsi</td>
-            <td id="fullHouse"></td>
-        </tr>
-        <tr>
-            <td>Sattuma</td>
-            <td id="chance"></td>
-        </tr>
-        <tr>
-            <td>Jatsi</td>
-            <td id="jatsi"></td>
-        </tr>
-        <tr>
-            <td>Summa</td>
-            <td id="score"></td>
-        </tr>
-    </table>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noppapeli</title>
+</head>
+<body>
+    
+    <html>
+        <h1>Noppapeli</h1>
+        
+        <div id="dice-container">
+            <button type="button" id="dice1" onclick="lockDice(this.id)"></button>
+        <button type="button" id="dice2" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice3" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice4" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice5" onclick="lockDice(this.id)"></button>
+        <button type="button" id="roll" onclick="rollDice(dice)">Roll the dice</button>
+        <div>Rolls left: <span id="rollsLeft"></span></div>
+    </div>
+    
+    <div id="scorecard-container">
+        <table id="upperSectionTable">
+            <tr>
+                <th>Combination</th>
+                <th>Score</th>
+            </tr>
+            <tr>
+                <td>Ones</td>
+                <td id="ones"></td>
+            </tr>
+            <tr>
+                <td>Twos</td>
+                <td id="twos"></td>
+            </tr>
+            <tr>
+                <td>Threes</td>
+                <td id="threes"></td>
+            </tr>
+            <tr>
+                <td>Fours</td>
+                <td id="fours"></td>
+            </tr>
+            <tr>
+                <td>Fives</td>
+                <td id="fives"></td>
+            </tr>
+            <tr>
+                <td>Sixes</td>
+                <td id="sixes"></td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td id="upperSectionTotal"></td>
+            </tr>
+            <tr>
+                <td>Bonus</td>
+                <td id="bonus"></td>
+            </tr>
+        </table>
+    
+        <table id="lowerSectionTable">
+            <tr>
+                <td>Pair</td>
+                <td id="pair"></td>
+            </tr>
+            <tr>
+                <td>Two pairs</td>
+                <td id="twoPairs"></td>
+            </tr>
+            <tr>
+                <td>Three of a kind</td>
+                <td id="threeOfAKind"></td>
+            </tr>
+            <tr>
+                <td>Four of a kind</td>
+                <td id="fourOfAKind"></td>
+            </tr>
+            <tr>
+                <td>Small straight</td>
+                <td id="smallStraight"></td>
+            </tr>
+            <tr>
+                <td>Big straight</td>
+                <td id="bigStraight"></td>
+            </tr>
+            <tr>
+                <td>Full house</td>
+                <td id="fullHouse"></td>
+            </tr>
+            <tr>
+                <td>Chance</td>
+                <td id="chance"></td>
+            </tr>
+            <tr>
+                <td>Jatsi</td>
+                <td id="jatsi"></td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td id="score"></td>
+            </tr>
+        </table>
+    </div>
+    
 <script src="script.js"></script>
+</body>
 </html>

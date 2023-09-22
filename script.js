@@ -7,6 +7,7 @@ let score = {
         { possible: null, written: null },  // fives
         { possible: null, written: null }   // sixes
     ],
+    upperSectionTotal: null,
     bonus: null,
     lowerSection: {
         pair: {possible: null, written: null},
@@ -21,18 +22,32 @@ let score = {
     },
     total: null,
     resetPossibles() {
-        for (const upperHand of this.upperSection) {
-          upperHand.possible = null;
+        for (const combination of this.upperSection) {
+          combination.possible = null;
         }
       
-        for (const lowerHand of Object.values(this.lowerSection)) {
-          lowerHand.possible = null;
+        for (const combination of Object.values(this.lowerSection)) {
+          combination.possible = null;
         }
     }
 };
 
+function showPossibleScores(score) {
+    const upperIds = ["ones", "twos", "threes", "fours", "fives", "sixes"];
+
+    for (let i = 0; i < 6; i++) {
+        const possibleScore = score.upperSection[i].possible;
+        document.getElementById(upperIds[i]).innerText = possibleScore;
+    }
+    
+    for (const combination in score.lowerSection) {
+            const possibleScore = score.lowerSection[combination].possible;
+            document.getElementById(combination).innerText = possibleScore;
+    }
+}
+
 let dice = [
-    [0], // number of times rolled
+    [3], // number of rolls left this turn
     [, false], // [face value, isLocked]
     [, false],
     [, false],
@@ -53,19 +68,24 @@ function lockDice(id) {
 
 function rollDice(dice) {
     score.resetPossibles();
-    // dice[0]++; uncomment this to enable three roll limit
-    if (dice[0] <= 3) {
+
+    if (dice[0] > 0) {
         for (let i = 1; i <= 5; i++) {
             if  (dice[i][1] == false)
-                dice[i][0] = 1 + Math.floor(Math.random() * 6);
-            document.getElementById("dice" + i).innerHTML = dice[i][0];
+            dice[i][0] = 1 + Math.floor(Math.random() * 6);
+        document.getElementById("dice" + i).innerHTML = dice[i][0];
         }
+        dice[0]--;
+        document.getElementById("rollsLeft").innerText = dice[0];
     }
-    const diceCounts = countDieValues(dice);
-    calculatePossibleScores(diceCounts);
+
+
+    const faceValueCounts = countFaceValues(dice);
+    calculatePossibleScores(faceValueCounts);
+    showPossibleScores(score);
 }
 
-function countDieValues(dice) {
+function countFaceValues(dice) {
     const faceValueCounts = {};
     
     // i=1 because the roll count is at dice[0]
