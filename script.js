@@ -44,7 +44,15 @@ function resetDice() {
         [ null, false]
     ];
 
+    for(let i = 1; i < 6; i++){
+        document.getElementById("die" + i).classList.remove("locked");
+        document.getElementById("die" + i).innerText = "";
+    }
+
+    document.getElementById("roll").style.display = "inline-block";
     document.getElementById("rollsLeft").innerText = dice[0];
+
+
 
     return dice;
 }
@@ -57,11 +65,15 @@ function updateScoreCell(scoreCell, possibleScore) {
         scoreCell.classList.toggle("possible-score", possibleScore !== null);
         scoreCell.classList.toggle("no-possible-score", possibleScore === null);
 
-        // https://stackoverflow.com/questions/4950115/removeeventlistener-on-anonymous-functions-in-javascript
-        scoreCell.addEventListener("click", function eventHandler() {
-            handleEndTurn(scoreCell);
-            this.removeEventListener('click', eventHandler);
-        });
+        // https://stackoverflow.com/questions/11455515/how-to-check-whether-dynamically-attached-event-listener-exists-or-not
+        if(!scoreCell.getAttribute("listener")) {
+            scoreCell.setAttribute("listener", true)
+            // https://stackoverflow.com/questions/4950115/removeeventlistener-on-anonymous-functions-in-javascript
+            scoreCell.addEventListener("click", function eventHandler() {
+                handleEndTurn(scoreCell);
+                this.removeEventListener("click", eventHandler);
+            });
+        }
 }
 
 function updateScoresheetUI(scoresheet) {
@@ -86,7 +98,7 @@ function updateScoresheetUI(scoresheet) {
 }
 
 function lockDice(id) {
-    const diceIndex = id.slice(4, 5);
+    const diceIndex = id.slice(3, 4);
     // prevent locking dice before first roll and after last
     if (dice[diceIndex][0] === null || dice[0] === 0) {
         return;
@@ -105,10 +117,14 @@ function rollDice(dice) {
         for (let i = 1; i <= 5; i++) {
             if (dice[i][1] == false)
                 dice[i][0] = 1 + Math.floor(Math.random() * 6);
-            document.getElementById("dice" + i).innerHTML = dice[i][0];
+            document.getElementById("die" + i).innerText = dice[i][0];
         }
         dice[0]--;
         document.getElementById("rollsLeft").innerText = dice[0];
+    } 
+
+    if(dice[0] === 0) {
+        document.getElementById("roll").style.display = "none";
     }
 
 
@@ -194,16 +210,16 @@ function calculatePossibleScores(faceValueCounts) {
     }
 }
 
-function resetScoreCell(scoreCell) {
+function removePossibleStylesFromStyleCell(scoreCell) {
     scoreCell.classList.remove("possible-score");
     scoreCell.classList.remove("no-possible-score");
 }
 
-function resetScoreSheetUI() {
+function removePossiblesFromUI() {
     for (let i = 0; i < 6; i++) {
         const scoreCell = document.getElementById(upperIds[i]);
 
-        resetScoreCell(scoreCell);
+        removePossibleStylesFromStyleCell(scoreCell);
 
         if(scoresheet.upperSection[i].written === null) {
             scoreCell.innerText = "";
@@ -213,7 +229,7 @@ function resetScoreSheetUI() {
     for (const combination in scoresheet.lowerSection) {
         const scoreCell = document.getElementById(combination)
 
-        resetScoreCell(scoreCell);
+        removePossibleStylesFromStyleCell(scoreCell);
 
         if(scoresheet.lowerSection[combination].written === null) {
             scoreCell.innerText = "";
@@ -221,23 +237,34 @@ function resetScoreSheetUI() {
     }
 }
 
-
-
 function handleEndTurn(scoreCell) {
     const id = scoreCell.id;
     const scoreString = scoreCell.innerText;
+    // - is used in the ui but 0 in the scoresheet calculations
     const score = (scoreString === "-") ? 0 : parseInt(scoreString);
 
-    console.log(scoresheet)
-    // write the score
+    // write score to upper section
     if (upperIds.includes(id)) {
         scoresheet.upperSection[upperIds.indexOf(id)].written = score;
+        scoresheet.upperSectionTotal += score;
+        document.getElementById("upperSectionTotal").innerText = scoresheet.upperSectionTotal;
+
+        // award bonus
+        if(scoresheet.upperSectionTotal >= 63) {
+            scoresheet.bonus = 50;
+            document.getElementById("bonus").innerText = 50;
+        }
+
+    // write score to lower section
     } else {
         scoresheet.lowerSection[id].written = score;
     }
 
+    scoresheet.total += score;
+    document.getElementById("total").innerText = scoresheet.total;
+
     scoresheet.resetPossibles();
-    resetScoreSheetUI();
+    removePossiblesFromUI();
     dice = resetDice();
    
 }
