@@ -1,4 +1,6 @@
-let score = {
+const upperIds = ["ones", "twos", "threes", "fours", "fives", "sixes"];
+
+let scoresheet = {
     upperSection: [
         { possible: null, written: null },  // ones
         { possible: null, written: null },  // twos
@@ -32,47 +34,62 @@ let score = {
     }
 };
 
-function updateScoreCell(scoreCell, possibleScore) {
-    scoreCell.innerText = possibleScore !== null ? possibleScore : "-";
-    scoreCell.classList.toggle("possible-score", possibleScore !== null);
-    scoreCell.classList.toggle("no-possible-score", possibleScore === null);
+function resetDice() {
+    const dice = [
+        3, // number of rolls left
+        [ null , false], // [face value, isLocked]
+        [ null, false],
+        [ null, false],
+        [ null, false],
+        [ null, false]
+    ];
 
-    scoreCell.addEventListener("click", function () {
-        // TODO: clicking the cell should write the score to the scorecard
-    });
+    document.getElementById("rollsLeft").innerText = dice[0];
+
+    return dice;
 }
 
-function showPossibleScores(score) {
-    const upperIds = ["ones", "twos", "threes", "fours", "fives", "sixes"];
+let dice = resetDice();
 
+function updateScoreCell(scoreCell, possibleScore) {
+
+        scoreCell.innerText = possibleScore !== null ? possibleScore : "-";
+        scoreCell.classList.toggle("possible-score", possibleScore !== null);
+        scoreCell.classList.toggle("no-possible-score", possibleScore === null);
+
+        // https://stackoverflow.com/questions/4950115/removeeventlistener-on-anonymous-functions-in-javascript
+        scoreCell.addEventListener("click", function eventHandler() {
+            handleEndTurn(scoreCell);
+            this.removeEventListener('click', eventHandler);
+        });
+}
+
+function updateScoresheetUI(scoresheet) {
     for (let i = 0; i < 6; i++) {
-        const possibleScore = score.upperSection[i].possible;
+
+        const possibleScore = scoresheet.upperSection[i].possible;
         const scoreCell = document.getElementById(upperIds[i]);
 
-        updateScoreCell(scoreCell, possibleScore);
+        if(scoresheet.upperSection[i].written === null) {
+            updateScoreCell(scoreCell, possibleScore);
+        }
     }
 
-    for (const combination in score.lowerSection) {
-        const possibleScore = score.lowerSection[combination].possible;
+    for (const combination in scoresheet.lowerSection) {
+        const possibleScore = scoresheet.lowerSection[combination].possible;
         const scoreCell = document.getElementById(combination)
 
-        updateScoreCell(scoreCell, possibleScore);
+        if(scoresheet.lowerSection[combination].written === null) {
+            updateScoreCell(scoreCell, possibleScore);
+        }
     }
-}
-
-let dice = [
-];
-
-dice.push(3); // rolls left
-for(let i = 0; i < 6; i++) { // five dice
-    dice.push([null, false]); // face value, isLocked
 }
 
 function lockDice(id) {
     const diceIndex = id.slice(4, 5);
     // prevent locking dice before first roll and after last
-    if(dice[diceIndex][0] === null || dice[0] === 0){
-        return ;
+    if (dice[diceIndex][0] === null || dice[0] === 0) {
+        return;
     }
 
     // toggle locked state
@@ -82,7 +99,7 @@ function lockDice(id) {
 }
 
 function rollDice(dice) {
-    score.resetPossibles();
+    scoresheet.resetPossibles();
 
     if (dice[0] > 0) {
         for (let i = 1; i <= 5; i++) {
@@ -97,7 +114,7 @@ function rollDice(dice) {
 
     const faceValueCounts = countFaceValues(dice);
     calculatePossibleScores(faceValueCounts);
-    showPossibleScores(score);
+    updateScoresheetUI(scoresheet);
 }
 
 function countFaceValues(dice) {
@@ -126,7 +143,7 @@ function calculatePossibleScores(faceValueCounts) {
         sum += faceValueInt * currentCount;
 
         // upper section scores
-        score.upperSection[faceValueInt - 1].possible = faceValueInt * currentCount;
+        scoresheet.upperSection[faceValueInt - 1].possible = faceValueInt * currentCount;
 
         // pair
         if (currentCount >= 2) {
@@ -136,21 +153,21 @@ function calculatePossibleScores(faceValueCounts) {
             if (firstPair === null) {
                 firstPair = thisPair;
             } else {
-                score.lowerSection.twoPairs.possible = firstPair + thisPair;
+                scoresheet.lowerSection.twoPairs.possible = firstPair + thisPair;
             }
-            score.lowerSection.pair.possible = thisPair;
+            scoresheet.lowerSection.pair.possible = thisPair;
 
             // three of a kind
             if (currentCount >= 3)
-                score.lowerSection.threeOfAKind.possible = 3 * faceValueInt;
+                scoresheet.lowerSection.threeOfAKind.possible = 3 * faceValueInt;
 
             // four of a kind
             if (currentCount >= 4)
-                score.lowerSection.fourOfAKind.possible = 4 * faceValueInt;
+                scoresheet.lowerSection.fourOfAKind.possible = 4 * faceValueInt;
 
             // jatsi - five of a kind
             if (currentCount === 5) {
-                score.lowerSection.jatsi.possible = 50;
+                scoresheet.lowerSection.jatsi.possible = 50;
             }
         }
 
@@ -161,20 +178,66 @@ function calculatePossibleScores(faceValueCounts) {
     }
 
     // chance
-    score.lowerSection.chance.possible = sum;
+    scoresheet.lowerSection.chance.possible = sum;
 
     if (fullHouse)
-        score.lowerSection.fullHouse.possible = sum;
+        scoresheet.lowerSection.fullHouse.possible = sum;
 
     // check straights
     if (Object.keys(faceValueCounts).length === 5) { // five unique values
         let diceString = Object.keys(faceValueCounts).join("");
 
         if (diceString === '12345')
-            score.lowerSection.smallStraight.possible = 15;
+            scoresheet.lowerSection.smallStraight.possible = 15;
         else if (diceString === '23456')
-            score.lowerSection.bigStraight.possible = 20;
+            scoresheet.lowerSection.bigStraight.possible = 20;
+    }
+}
+
+function resetScoreCell(scoreCell) {
+    scoreCell.classList.remove("possible-score");
+    scoreCell.classList.remove("no-possible-score");
+}
+
+function resetScoreSheetUI() {
+    for (let i = 0; i < 6; i++) {
+        const scoreCell = document.getElementById(upperIds[i]);
+
+        resetScoreCell(scoreCell);
+
+        if(scoresheet.upperSection[i].written === null) {
+            scoreCell.innerText = "";
+        }
     }
 
-    console.log(score); // remove when possibilities shown in ui
+    for (const combination in scoresheet.lowerSection) {
+        const scoreCell = document.getElementById(combination)
+
+        resetScoreCell(scoreCell);
+
+        if(scoresheet.lowerSection[combination].written === null) {
+            scoreCell.innerText = "";
+        }
+    }
+}
+
+
+
+function handleEndTurn(scoreCell) {
+    const id = scoreCell.id;
+    const scoreString = scoreCell.innerText;
+    const score = (scoreString === "-") ? 0 : parseInt(scoreString);
+
+    console.log(scoresheet)
+    // write the score
+    if (upperIds.includes(id)) {
+        scoresheet.upperSection[upperIds.indexOf(id)].written = score;
+    } else {
+        scoresheet.lowerSection[id].written = score;
+    }
+
+    scoresheet.resetPossibles();
+    resetScoreSheetUI();
+    dice = resetDice();
+   
 }
