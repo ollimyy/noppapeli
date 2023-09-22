@@ -61,21 +61,24 @@ function showPossibleScores(score) {
 }
 
 let dice = [
-    [3], // number of rolls left this turn
-    [, false], // [face value, isLocked]
-    [, false],
-    [, false],
-    [, false],
-    [, false]
 ];
 
+dice.push(3); // rolls left
+for(let i = 0; i < 6; i++) { // five dice
+    dice.push([null, false]); // face value, isLocked
+}
+
 function lockDice(id) {
-    const diceNum = id.slice(4, 5);
-    const diceElement = document.getElementById(id);
-    
-    const isLocked = dice[diceNum][1];
-    dice[diceNum][1] = !isLocked;
-    diceElement.classList.toggle("locked", !isLocked);
+    const diceIndex = id.slice(4, 5);
+    // prevent locking dice before first roll and after last
+    if(dice[diceIndex][0] === null || dice[0] === 0){
+        return ;
+    }
+
+    // toggle locked state
+    const isLocked = dice[diceIndex][1];
+    dice[diceIndex][1] = !isLocked;
+    document.getElementById(id).classList.toggle("locked", !isLocked);
 }
 
 function rollDice(dice) {
