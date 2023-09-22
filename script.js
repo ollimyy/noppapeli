@@ -10,39 +10,53 @@ let score = {
     upperSectionTotal: null,
     bonus: null,
     lowerSection: {
-        pair: {possible: null, written: null},
-        twoPairs: {possible: null, written: null},
-        threeOfAKind: {possible: null, written: null},
-        fourOfAKind: {possible: null, written: null},
-        smallStraight: {possible: null, written: null},
-        bigStraight: {possible: null, written: null},
-        fullHouse: {possible: null, written: null},
-        chance: {possible: null, written: null},
-        jatsi: {possible: null, written: null},
+        pair: { possible: null, written: null },
+        twoPairs: { possible: null, written: null },
+        threeOfAKind: { possible: null, written: null },
+        fourOfAKind: { possible: null, written: null },
+        smallStraight: { possible: null, written: null },
+        bigStraight: { possible: null, written: null },
+        fullHouse: { possible: null, written: null },
+        chance: { possible: null, written: null },
+        jatsi: { possible: null, written: null },
     },
     total: null,
     resetPossibles() {
         for (const combination of this.upperSection) {
-          combination.possible = null;
+            combination.possible = null;
         }
-      
+
         for (const combination of Object.values(this.lowerSection)) {
-          combination.possible = null;
+            combination.possible = null;
         }
     }
 };
+
+function updateScoreCell(scoreCell, possibleScore) {
+    scoreCell.innerText = possibleScore !== null ? possibleScore : "-";
+    scoreCell.classList.toggle("possible-score", possibleScore !== null);
+    scoreCell.classList.toggle("no-possible-score", possibleScore === null);
+
+    scoreCell.addEventListener("click", function () {
+        // TODO: clicking the cell should write the score to the scorecard
+    });
+}
 
 function showPossibleScores(score) {
     const upperIds = ["ones", "twos", "threes", "fours", "fives", "sixes"];
 
     for (let i = 0; i < 6; i++) {
         const possibleScore = score.upperSection[i].possible;
-        document.getElementById(upperIds[i]).innerText = possibleScore;
+        const scoreCell = document.getElementById(upperIds[i]);
+
+        updateScoreCell(scoreCell, possibleScore);
     }
-    
+
     for (const combination in score.lowerSection) {
-            const possibleScore = score.lowerSection[combination].possible;
-            document.getElementById(combination).innerText = possibleScore;
+        const possibleScore = score.lowerSection[combination].possible;
+        const scoreCell = document.getElementById(combination)
+
+        updateScoreCell(scoreCell, possibleScore);
     }
 }
 
@@ -57,13 +71,11 @@ let dice = [
 
 function lockDice(id) {
     const diceNum = id.slice(4, 5);
-    if (dice[diceNum][1] == false) {
-        dice[diceNum][1] = true;
-        document.getElementById(id).style.color = 'blue'
-    } else {
-        dice[diceNum][1] = false;
-        document.getElementById(id).style.color = ''
-    }
+    const diceElement = document.getElementById(id);
+    
+    const isLocked = dice[diceNum][1];
+    dice[diceNum][1] = !isLocked;
+    diceElement.classList.toggle("locked", !isLocked);
 }
 
 function rollDice(dice) {
@@ -71,9 +83,9 @@ function rollDice(dice) {
 
     if (dice[0] > 0) {
         for (let i = 1; i <= 5; i++) {
-            if  (dice[i][1] == false)
-            dice[i][0] = 1 + Math.floor(Math.random() * 6);
-        document.getElementById("dice" + i).innerHTML = dice[i][0];
+            if (dice[i][1] == false)
+                dice[i][0] = 1 + Math.floor(Math.random() * 6);
+            document.getElementById("dice" + i).innerHTML = dice[i][0];
         }
         dice[0]--;
         document.getElementById("rollsLeft").innerText = dice[0];
@@ -87,32 +99,32 @@ function rollDice(dice) {
 
 function countFaceValues(dice) {
     const faceValueCounts = {};
-    
+
     // i=1 because the roll count is at dice[0]
     for (let i = 1; i <= 5; i++) {
         let roll = dice[i][0];
-        
+
         faceValueCounts[roll] = (faceValueCounts[roll] || 0) + 1;
     }
 
     return faceValueCounts;
 }
 
-function calculatePossibleScores(faceValueCounts) {    
-    
+function calculatePossibleScores(faceValueCounts) {
+
     let sum = 0;
     let firstPair = null;
     let fullHouse = false;
-    
+
     for (let faceValue in faceValueCounts) {
         const currentCount = faceValueCounts[faceValue];
-        const faceValueInt = parseInt(faceValue);   
-        
+        const faceValueInt = parseInt(faceValue);
+
         sum += faceValueInt * currentCount;
-        
+
         // upper section scores
         score.upperSection[faceValueInt - 1].possible = faceValueInt * currentCount;
-        
+
         // pair
         if (currentCount >= 2) {
             let thisPair = 2 * faceValueInt;
@@ -127,7 +139,7 @@ function calculatePossibleScores(faceValueCounts) {
 
             // three of a kind
             if (currentCount >= 3)
-                score.lowerSection.threeOfAKind.possible= 3 * faceValueInt;
+                score.lowerSection.threeOfAKind.possible = 3 * faceValueInt;
 
             // four of a kind
             if (currentCount >= 4)
@@ -148,11 +160,11 @@ function calculatePossibleScores(faceValueCounts) {
     // chance
     score.lowerSection.chance.possible = sum;
 
-    if(fullHouse)
+    if (fullHouse)
         score.lowerSection.fullHouse.possible = sum;
-    
+
     // check straights
-    if(Object.keys(faceValueCounts).length === 5) { // five unique values
+    if (Object.keys(faceValueCounts).length === 5) { // five unique values
         let diceString = Object.keys(faceValueCounts).join("");
 
         if (diceString === '12345')

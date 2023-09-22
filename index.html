@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Noppapeli</title>
 </head>
 <body>
@@ -11,11 +12,11 @@
         <h1>Noppapeli</h1>
         
         <div id="dice-container">
-            <button type="button" id="dice1" onclick="lockDice(this.id)"></button>
-        <button type="button" id="dice2" onclick="lockDice(this.id)"></button> 
-        <button type="button" id="dice3" onclick="lockDice(this.id)"></button> 
-        <button type="button" id="dice4" onclick="lockDice(this.id)"></button> 
-        <button type="button" id="dice5" onclick="lockDice(this.id)"></button>
+        <button type="button" id="dice1" class="die" onclick="lockDice(this.id)"></button>
+        <button type="button" id="dice2" class="die" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice3" class="die" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice4" class="die" onclick="lockDice(this.id)"></button> 
+        <button type="button" id="dice5" class="die" onclick="lockDice(this.id)"></button>
         <button type="button" id="roll" onclick="rollDice(dice)">Roll the dice</button>
         <div>Rolls left: <span id="rollsLeft"></span></div>
     </div>

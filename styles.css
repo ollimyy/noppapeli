@@ -1,0 +1,21 @@
+
+/* dice */
+.die {
+    width: 25px;
+    height: 25px;
+}
+
+.locked {
+    background-color: lightblue;
+}
+
+/* scorecard cells */
+.possible-score {
+    background-color: lightgreen;
+    font-weight: bold;
+}
+
+.no-possible-score {
+    background-color: lightpink;
+}
+
