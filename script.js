@@ -253,6 +253,7 @@ function handleEndTurn(scoreCell) {
         if(scoresheet.upperSectionTotal >= 63) {
             scoresheet.bonus = 50;
             document.getElementById("bonus").innerText = 50;
+            scoresheet.total += 50;
         }
 
     // write score to lower section
