@@ -49,7 +49,7 @@ function resetDice() {
         document.getElementById("die" + i).innerText = "";
     }
 
-    document.getElementById("roll").style.display = "inline-block";
+    document.getElementById("roll").style.visibility = "visible"
     document.getElementById("rollsLeft").innerText = dice[0];
 
 
@@ -124,7 +124,7 @@ function rollDice(dice) {
     } 
 
     if(dice[0] === 0) {
-        document.getElementById("roll").style.display = "none";
+        document.getElementById("roll").style.visibility = "hidden";
     }
 
 
