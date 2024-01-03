@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+    <title>Noppapeli</title>
+</head>
+
+<body>
+
+    <div id="rules-modal" style="display: none;">
+        <div id="rules-modal-content">
+            <h2>Game Rules: </h2>
+            <button id="close-rules-button" class="rules-button"><strong>Return to game</strong></button>
+            <p>
+            <ol>
+                <li><strong>Objective:</strong> Score the most points by rolling dice to create specific combinations.
+                </li><br>
+                <li><strong>Gameplay:</strong>
+                    <ul>
+                        <li>Click "ROLL" to roll the five dice, with a maximum of three rolls allowed per turn.</li>
+                        <li>To lock a die between rolls, click on it. Locked dice will appear in blue and won't be
+                            rolled again. Click again to unlock. You can lock any amount of dice.</li>
+                        <li>After each roll, the scorecard will highlight potential scoring combinations for the current
+                            dice set in green.</li>
+                        <li>Your turn concludes when you select a green or red score on the scorecard.</li>
+                        <li>A score must be recorded each turn, even if your dice don't match any remaining combination.
+                        </li>
+                        <li>You have the option to score zero for a combination (indicated by a red dash) even if your
+                            dice match other combinations.</li>
+                        <li>Each combination can only be scored once throughout the game.</li>
+                        <li>The game concludes once all combinations have been scored.</li><br>
+                        <li>You can play multiplayer by opening the game in new browser windows for each player!</li>
+                    </ul><br>
+                <li><strong>Combinations and Scoring:</strong>
+                    <p>Each combination is worth the sum of the dice used to make that combination.</p>
+                    <p><strong>Upper Section:</strong></p>
+                        <ul>
+                            <li><strong>Ones, Twos, Threes, Fours, Fives, Sixes:</strong> Dice of a certain number.</li>
+                            <li><strong>Bonus:</strong> Scoring 63 or more points in the upper section gives you 50 bonus
+                                points!</li>
+                        </ul>
+                    <p><strong>Lower Section:</strong></p>
+                        <ul>
+                            <li><strong>One Pair:</strong> Two dice showing the same number.</li>
+                            <li><strong>Two Pairs:</strong> Two different sets of two dice showing the same number.</li>
+                            <li><strong>Three-of-a-Kind:</strong> Three dice showing the same number.</li>
+                            <li><strong>Four-of-a-Kind:</strong> Four dice showing the same number.</li>
+                            <li><strong>Small Straight:</strong> A sequence of 1-2-3-4-5.</li>
+                            <li><strong>Large Straight:</strong> A sequence of 2-3-4-5-6.</li>
+                            <li><strong>Full House:</strong> A combination of a three-of-a-kind and a pair.</li>
+                            <li><strong>Chance:</strong> Any combination of dice.</li>
+                            <li><strong>Jatsi:</strong> All five dice with the same number. Always worth 50 points,
+                                regardless of the numbers!</li>
+                        </ul>
+                </li>
+            </ol>
+            </p>
+        </div>
+    </div>
+
+    <div class=flex-container>
+
+        <div>
+
+            <div class="dice-container">
+                <button type="button" id="die1" class="die" onclick="lockDice(this.id)"></button>
+                <button type="button" id="die2" class="die" onclick="lockDice(this.id)"></button>
+                <button type="button" id="die3" class="die" onclick="lockDice(this.id)"></button>
+                <button type="button" id="die4" class="die" onclick="lockDice(this.id)"></button>
+                <button type="button" id="die5" class="die" onclick="lockDice(this.id)"></button>
+            </div>
+
+            <div class="rolling-container">
+                <button type="button" id="roll" onclick="rollDice(dice)">Roll</button>
+                <div>Rolls left: <span id="rollsLeft"></span></div>
+            </div>
+
+        </div>
+
+        <div id="scorecard-container">
+            <table id="upperSectionTable">
+                <tr>
+                    <th>Upper section</th>
+                    <th>Score</th>
+                </tr>
+                <tr>
+                    <td>Ones</td>
+                    <td id="ones" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Twos</td>
+                    <td id="twos" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Threes</td>
+                    <td id="threes" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Fours</td>
+                    <td id="fours" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Fives</td>
+                    <td id="fives" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Sixes</td>
+                    <td id="sixes" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td id="upperSectionTotal" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Bonus</td>
+                    <td id="bonus" class="score"></td>
+                </tr>
+            </table>
+
+            <table id="lowerSectionTable">
+                <tr>
+                    <th>Lower section</th>
+                    <th>Score</th>
+                </tr>
+                <tr>
+                    <td>Pair</td>
+                    <td id="pair" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Two pairs</td>
+                    <td id="twoPairs" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Three of a kind</td>
+                    <td id="threeOfAKind" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Four of a kind</td>
+                    <td id="fourOfAKind" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Small straight</td>
+                    <td id="smallStraight" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Big straight</td>
+                    <td id="bigStraight" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Full house</td>
+                    <td id="fullHouse" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Chance</td>
+                    <td id="chance" class="score"></td>
+                </tr>
+                <tr>
+                    <td>Jatsi</td>
+                    <td id="jatsi" class="score"></td>
+                </tr>
+            </table>
+            <p>Total score: <span id="total"></span></p>
+            <button id="open-rules-button" class="rules-button">Rules</button>
+        </div>
+
+    </div>
+
+    <script src="game_script.js"></script>
+</body>
+</html>

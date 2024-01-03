@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Noppapeli</title>
 </head>
-
 <body>
+    <div class="flex-container">
+        <h1>Noppapeli</h1>
+        <div class="flex-container">
+            <p class="landing-paragraph">A browser game inspired by <a href="https://en.wikipedia.org/wiki/Yahtzee">Yahtzee</a>.<br><br>
+                Roll the dice and score points from different combinations.<br><br>
+                Play solo or open more browser windows to play with friends!</p>
+            <a href="./game/game.html" id="start-game-button">Start Game</a>
+            <button id="open-rules-button" class="landing-rules-button">Read the rules</button>
+        </div>
+    </div>
 
     <div id="rules-modal" style="display: none;">
         <div id="rules-modal-content">
@@ -60,115 +68,6 @@
             </p>
         </div>
     </div>
-
-    <div class=flex-container>
-
-        <div>
-
-            <div class="dice-container">
-                <button type="button" id="die1" class="die" onclick="lockDice(this.id)"></button>
-                <button type="button" id="die2" class="die" onclick="lockDice(this.id)"></button>
-                <button type="button" id="die3" class="die" onclick="lockDice(this.id)"></button>
-                <button type="button" id="die4" class="die" onclick="lockDice(this.id)"></button>
-                <button type="button" id="die5" class="die" onclick="lockDice(this.id)"></button>
-            </div>
-
-            <div class="rolling-container">
-                <button type="button" id="roll" onclick="rollDice(dice)">Roll</button>
-                <div>Rolls left: <span id="rollsLeft"></span></div>
-            </div>
-
-        </div>
-
-        <div id="scorecard-container">
-            <table id="upperSectionTable">
-                <tr>
-                    <th>Upper section</th>
-                    <th>Score</th>
-                </tr>
-                <tr>
-                    <td>Ones</td>
-                    <td id="ones" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Twos</td>
-                    <td id="twos" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Threes</td>
-                    <td id="threes" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Fours</td>
-                    <td id="fours" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Fives</td>
-                    <td id="fives" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Sixes</td>
-                    <td id="sixes" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td id="upperSectionTotal" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Bonus</td>
-                    <td id="bonus" class="score"></td>
-                </tr>
-            </table>
-
-            <table id="lowerSectionTable">
-                <tr>
-                    <th>Lower section</th>
-                    <th>Score</th>
-                </tr>
-                <tr>
-                    <td>Pair</td>
-                    <td id="pair" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Two pairs</td>
-                    <td id="twoPairs" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Three of a kind</td>
-                    <td id="threeOfAKind" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Four of a kind</td>
-                    <td id="fourOfAKind" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Small straight</td>
-                    <td id="smallStraight" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Big straight</td>
-                    <td id="bigStraight" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Full house</td>
-                    <td id="fullHouse" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Chance</td>
-                    <td id="chance" class="score"></td>
-                </tr>
-                <tr>
-                    <td>Jatsi</td>
-                    <td id="jatsi" class="score"></td>
-                </tr>
-            </table>
-            <p>Total score: <span id="total"></span></p>
-            <button id="open-rules-button" class="rules-button">Rules</button>
-        </div>
-
-    </div>
-
-    <script src="script.js"></script>
 </body>
-
+<script src="landing_script.js"></script>
 </html>
