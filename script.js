@@ -52,8 +52,6 @@ function resetDice() {
     document.getElementById("roll").style.visibility = "visible"
     document.getElementById("rollsLeft").innerText = dice[0];
 
-
-
     return dice;
 }
 
@@ -237,8 +235,6 @@ function removePossiblesFromUI() {
     }
 }
 
-let bonusAwarded = false; // TODO: handle this better?
-
 function handleEndTurn(scoreCell) {
     const id = scoreCell.id;
     const scoreString = scoreCell.innerText;
@@ -252,7 +248,7 @@ function handleEndTurn(scoreCell) {
         document.getElementById("upperSectionTotal").innerText = scoresheet.upperSectionTotal;
 
         // award bonus
-        if(scoresheet.upperSectionTotal >= 63 && bonusAwarded === false) {
+        if(scoresheet.upperSectionTotal >= 63 && scoresheet.bonus === null) {
             scoresheet.bonus = 50;
             document.getElementById("bonus").innerText = 50;
             scoresheet.total += 50;
@@ -270,5 +266,13 @@ function handleEndTurn(scoreCell) {
     scoresheet.resetPossibles();
     removePossiblesFromUI();
     dice = resetDice();
-   
+}
+
+// handle rules modal visibility
+document.getElementById('open-rules-button').onclick = function() {
+    document.getElementById('rules-modal').style.display = 'flex';
+}
+
+document.getElementById('close-rules-button').onclick = function() {
+    document.getElementById('rules-modal').style.display = 'none';
 }
