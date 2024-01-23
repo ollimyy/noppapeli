@@ -37,14 +37,14 @@ let scoresheet = {
 function resetDice() {
     const dice = [
         3, // number of rolls left
-        [ null , false], // [face value, isLocked]
-        [ null, false],
-        [ null, false],
-        [ null, false],
-        [ null, false]
+        [null, false], // [face value, isLocked]
+        [null, false],
+        [null, false],
+        [null, false],
+        [null, false]
     ];
 
-    for(let i = 1; i < 6; i++){
+    for (let i = 1; i < 6; i++) {
         document.getElementById("die" + i).classList.remove("locked");
         document.getElementById("die" + i).innerText = "";
     }
@@ -59,19 +59,19 @@ let dice = resetDice();
 
 function updateScoreCell(scoreCell, possibleScore) {
 
-        scoreCell.innerText = possibleScore !== null ? possibleScore : "-";
-        scoreCell.classList.toggle("possible-score", possibleScore !== null);
-        scoreCell.classList.toggle("no-possible-score", possibleScore === null);
+    scoreCell.innerText = possibleScore !== null ? possibleScore : "-";
+    scoreCell.classList.toggle("possible-score", possibleScore !== null);
+    scoreCell.classList.toggle("no-possible-score", possibleScore === null);
 
-        // https://stackoverflow.com/questions/11455515/how-to-check-whether-dynamically-attached-event-listener-exists-or-not
-        if(!scoreCell.getAttribute("listener")) {
-            scoreCell.setAttribute("listener", true)
-            // https://stackoverflow.com/questions/4950115/removeeventlistener-on-anonymous-functions-in-javascript
-            scoreCell.addEventListener("click", function eventHandler() {
-                handleEndTurn(scoreCell);
-                this.removeEventListener("click", eventHandler);
-            });
-        }
+    // https://stackoverflow.com/questions/11455515/how-to-check-whether-dynamically-attached-event-listener-exists-or-not
+    if (!scoreCell.getAttribute("listener")) {
+        scoreCell.setAttribute("listener", true)
+        // https://stackoverflow.com/questions/4950115/removeeventlistener-on-anonymous-functions-in-javascript
+        scoreCell.addEventListener("click", function eventHandler() {
+            handleEndTurn(scoreCell);
+            this.removeEventListener("click", eventHandler);
+        });
+    }
 }
 
 function updateScoresheetUI(scoresheet) {
@@ -80,7 +80,7 @@ function updateScoresheetUI(scoresheet) {
         const possibleScore = scoresheet.upperSection[i].possible;
         const scoreCell = document.getElementById(upperIds[i]);
 
-        if(scoresheet.upperSection[i].written === null) {
+        if (scoresheet.upperSection[i].written === null) {
             updateScoreCell(scoreCell, possibleScore);
         }
     }
@@ -89,7 +89,7 @@ function updateScoresheetUI(scoresheet) {
         const possibleScore = scoresheet.lowerSection[combination].possible;
         const scoreCell = document.getElementById(combination)
 
-        if(scoresheet.lowerSection[combination].written === null) {
+        if (scoresheet.lowerSection[combination].written === null) {
             updateScoreCell(scoreCell, possibleScore);
         }
     }
@@ -119,9 +119,9 @@ function rollDice(dice) {
         }
         dice[0]--;
         document.getElementById("rollsLeft").innerText = dice[0];
-    } 
+    }
 
-    if(dice[0] === 0) {
+    if (dice[0] === 0) {
         document.getElementById("roll").style.visibility = "hidden";
     }
 
@@ -219,7 +219,7 @@ function removePossiblesFromUI() {
 
         removePossibleStylesFromStyleCell(scoreCell);
 
-        if(scoresheet.upperSection[i].written === null) {
+        if (scoresheet.upperSection[i].written === null) {
             scoreCell.innerText = "";
         }
     }
@@ -229,11 +229,22 @@ function removePossiblesFromUI() {
 
         removePossibleStylesFromStyleCell(scoreCell);
 
-        if(scoresheet.lowerSection[combination].written === null) {
+        if (scoresheet.lowerSection[combination].written === null) {
             scoreCell.innerText = "";
         }
     }
 }
+
+function handleEndGame() {
+    document.getElementById("final-score").innerText = scoresheet.total;
+    document.getElementById("end-game-modal").style.display = "block";
+    
+    document.getElementById("play-again-button").onclick = function () {
+        window.location.reload();
+    }
+}
+
+let turnCount = 0;
 
 function handleEndTurn(scoreCell) {
     const id = scoreCell.id;
@@ -248,14 +259,14 @@ function handleEndTurn(scoreCell) {
         document.getElementById("upperSectionTotal").innerText = scoresheet.upperSectionTotal;
 
         // award bonus
-        if(scoresheet.upperSectionTotal >= 63 && scoresheet.bonus === null) {
+        if (scoresheet.upperSectionTotal >= 63 && scoresheet.bonus === null) {
             scoresheet.bonus = 50;
             document.getElementById("bonus").innerText = 50;
             scoresheet.total += 50;
             bonusAwarded = true;
         }
 
-    // write score to lower section
+        // write score to lower section
     } else {
         scoresheet.lowerSection[id].written = score;
     }
@@ -263,16 +274,21 @@ function handleEndTurn(scoreCell) {
     scoresheet.total += score;
     document.getElementById("total").innerText = scoresheet.total;
 
+    turnCount++;
+    if (turnCount === 15) {
+        handleEndGame();
+    }
+
     scoresheet.resetPossibles();
     removePossiblesFromUI();
     dice = resetDice();
 }
 
 // handle rules modal visibility
-document.getElementById('open-rules-button').onclick = function() {
+document.getElementById('open-rules-button').onclick = function () {
     document.getElementById('rules-modal').style.display = 'flex';
 }
 
-document.getElementById('close-rules-button').onclick = function() {
+document.getElementById('close-rules-button').onclick = function () {
     document.getElementById('rules-modal').style.display = 'none';
 }
